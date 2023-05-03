@@ -1,0 +1,52 @@
+{% extends 'administrador/administrador_layout.html' %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% block css %}
+    .nacimiento-form {
+        display: inline-block;
+        width: 33%;
+    }
+{% endblock %}
+{% block title %} Editar Administrador {% endblock %}
+{% block content %}
+    {% if messages %}
+        <div class="alert alert-danger">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+        </div>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <h4>Datos de Usuario</h4>
+        <div class="form-row">
+            <div class="col-lg-8 col-md-8">{{ user_form.username|as_crispy_field }}</div>
+        </div>
+        <div class="form-row">
+            <div class="col-lg-8 col-md-8">{{ user_form.password|as_crispy_field }}</div>
+        </div>
+        <h4>Datos de Administrador</h4>
+        <div class="form-row">
+            <div class="col-lg-8 col-md-8">{{ form.first_name|as_crispy_field }}</div>
+        </div>
+        <div class="form-row">
+            <div class="col-lg-8 col-md-8">{{ form.last_name|as_crispy_field }}</div>
+        </div>
+        <div class="form-row">
+            <div class="col-lg-8 col-md-8">{{ form.documento|as_crispy_field }}</div>
+        </div>
+        <div class="form-row">
+            <div class="col-lg-8 col-md-8">{{ form.domicilio|as_crispy_field }}</div>
+        </div>
+        <div class="form-row">
+            <div class="col-lg-8 col-md-8">{{ form.telefono|as_crispy_field }}</div>
+        </div>
+        <div class="form-row">
+            <div class="col-lg-8 col-md-8">{{ form.email|as_crispy_field }}</div>
+        </div>
+        <div class="form-row">
+            <div class="col-lg-8 col-md-8">{{ form.nacimiento|as_crispy_field }}</div>
+        </div>
+        <button class="btn btn-info" type="submit">Actualizar</button>
+    </form>
+{% endblock content %}

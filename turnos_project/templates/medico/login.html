@@ -1,0 +1,58 @@
+{% extends "main_layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Login Medico{% endblock %}
+{% block css %}
+    body {
+        background-image:url("{% static "images/photo-background-3.jpg" %}");
+        background-position:center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    #full-container {
+        height:800px;
+    }
+    .login-box {
+        padding:100px 50px 100px;
+    }
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-7 col-md-5 col-sm-4">
+        </div>
+        <div class="col-lg-5 col-md-7 col-sm-8 login-box shadow-lg bg-white rounded" id="full-container">
+            <div class="text-center border-bottom pb-3 mb-3">
+                <img src="{% static 'images/logo-brand.svg' %}" height="120" width="120" />
+                <h2 class="text-center mt-1">Gestion Turnos</h2>
+            </div>
+            <form method="POST" action="{% url 'login-medico' %}">
+                {% csrf_token %}
+                <div class="form-group">            
+                    {{ auth_form.username|as_crispy_field }}
+                </div>
+                <div class="form-group">
+                    {{ auth_form.password|as_crispy_field }}
+                </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.level_tag == 'info' %}
+                        <div class="alert alert-info">
+                            {{ message }}
+                        </div>
+                        {% elif message.level_tag == 'error' %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <button type="submit" class="btn btn-outline-primary btn-block">Login</button>
+            </form>
+            <a href="{% url 'home' %}">Volver al Inicio</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+{% endblock %}

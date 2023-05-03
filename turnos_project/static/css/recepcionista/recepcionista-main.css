@@ -1,0 +1,39 @@
+body {
+  background-color: #f8f8f8;
+}
+/* -------------------- */
+/*        NAVBAR        */
+/* -------------------- */
+
+.main-navbar {
+  background-color:var(--dark-gunmetal);
+}
+.main-navbar .nav-item .nav-link{
+  color: white;
+}
+
+.persian-green {
+  background-color: var(--persian-green);
+  color: white;
+} 
+
+
+/* -------------------- */
+/*        BUTTONS       */
+/* -------------------- */
+.btn-persian-green {
+  background-color: var(--persian-green);
+  color: white;
+}
+.btn-persian-green:hover {
+  background-color: #119586;
+  color: white;
+}
+.title-header {
+  background-color: var(--dark-gunmetal);
+  color: white;
+}
+.content-box {
+  background-color:#f6f6f6;
+}
+

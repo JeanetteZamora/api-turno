@@ -1,0 +1,144 @@
+{% extends "recepcionista/recepcionista_layout.html" %}
+{% load widget_tweaks %}
+{% block title %}Gestionar Turnos{% endblock %}
+{% block css %}
+{% endblock %}
+{% block content %}
+<div class="p-0 container shadow bg-white rounded">
+    <div class="title-header py-3 px-5 my-1">
+        <h2>Gestionar Turnos</h2>
+    </div>
+    <div class="py-3 px-5 content-box">
+            <h3><strong>Paciente:</strong> {{ paciente.user.documento }} - {{ paciente.user.last_name }} {{ paciente.user.first_name }} </h3>
+            <div>
+            {% if turnos %}
+                <div id="alertMessage" class="alert" role="alert">
+                </div>
+                <table class="table table-responsive table-bordered table-hover">
+                    <thead class="persian-green">
+                        <tr>
+                            <th>Nro Turno</th>
+                            <th>Especialidad</th>
+                            <th>Medico</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Estado</th>
+                            <th>Opcion #1</th>
+                            <th>Opcion #2</th>
+                            <th>Opcion #3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for turno in turnos %}
+                        <tr>
+                            <td class="table-light">{{ turno.pk }}</td>
+                            <td class="table-light">{{ turno.medico.especialidad }}</td>
+                            <td class="table-light">{{ turno.medico }}</td>
+                            <td class="table-light">{{ turno.fecha.date }}</td>
+                            <td class="table-light">{{ turno.fecha.time }}</td>
+                            <td class="table-light"><strong>{{ turno.get_estado_display|upper }}</strong></td>
+                            <td class="table-light"><a href="{% url 'imprimir-reserva' paciente.user.pk turno.pk %}" class="btn btn-outline-info"><i class="flaticon-print">Imprimir</i></a></td> 
+                            {% if turno.estado == 2 %} 
+                            <td class="table-light"><button name="confirmar" type="button" class="btn btn-outline-success py-2" value="{{ turno.pk }}">Confirmar</button></td>
+                            <td class="table-light"><button name="cancelar" type="button" class="btn btn-outline-danger py-2" value="{{ turno.pk }}">Cancelar</button></td>
+                            {% else %}
+                            <td class="table-light"><button name="confirmar" type="button" class="btn btn-outline-success py-2" value="{{ turno.pk }}" disabled>Confirmar</button></td>
+                            <td class="table-light"><button name="cancelar" type="button" class="btn btn-outline-danger py-2" value="{{ turno.pk }}" disabled>Cancelar</button></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+            <h4>No se han encontrado turnos pendientes para el paciente</h4>
+            {% endif %}
+            </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+</script>
+<script>
+    $(document).ready(function(e){
+
+        $("button[name='confirmar']").on("click", function(event){
+            const $callButton = $(this);
+            const nroTurno = this.value;
+            let sendData = {
+                turno: nroTurno,
+            }
+            $.ajax({
+                method:'PUT',
+                url:"{% url 'confirmar-reserva-ajax' %}",
+                contentType: 'application/json',
+                datatype:'json',
+                data: JSON.stringify(sendData),
+                success: function(data) {
+                    $callButton.parents("tr").addClass("table-secondary");
+                    $("#alertMessage").removeClass("alert-danger");
+                    $("#alertMessage").addClass("alert-success");
+                    $("#alertMessage").html("El turno #"+ nroTurno + " ha sido confirmado");
+                    $callButton.parents("tr").find("button[name='cancelar']").prop("disabled",true);
+                    $callButton.parents("tr").find(".estado").html("Confirmado");
+                    $callButton.prop("disabled",true);
+                }
+            });
+        });
+
+        $("button[name='cancelar']").on("click", function(event){
+            console.log("BOTON");
+            const $callButton = $(this);
+            const nroTurno = this.value;
+            let sendData = {
+                turno: nroTurno,
+            }
+            $.ajax({
+                method:'PUT',
+                url:"{% url 'cancelar-reserva-ajax' %}",
+                contentType: 'application/json',
+                datatype:'json',
+                data: JSON.stringify(sendData),
+                success: function(data) {
+                    $callButton.parents("tr").addClass("table-secondary");
+                    $("#alertMessage").removeClass("alert-success");
+                    $("#alertMessage").addClass("alert-danger");
+                    $("#alertMessage").html("El turno #"+ nroTurno + " ha sido cancelado");
+                    $callButton.parents("tr").find("button[name='cancelar']").prop("disabled",true);
+                    $callButton.parents("tr").find(".estado").html("Cancelado");
+                    $callButton.prop("disabled",true);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% load static %}
+{% if paciente %}
+    <div class="card" style="border: 1px solid; border-color: #777777">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-8 text-center">
+                    <img class="img img-responsive" src="{% static "images/essential-set-fill/svg/user-3.svg" %}" width="80%" height="80%" />
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h1><strong>{{ paciente.user.last_name }} {{ paciente.user.first_name }}</strong></h1>
+                    <h4>Paciente</h4>
+                    {% if paciente.penalizado %}
+                        <p class="card-text text-danger">Actualmente el paciente se encuentra penalizado.
+                            Será despenalizado el {{ paciente.fecha_despenalizacion.date }}
+                        </p>
+                    {% endif %}
+                </div>
+                <div class="col-lg-5 col-md-5 mt-3">
+                    <p class="card-text"><strong>Documento:</strong> {{ paciente.user.documento }}</p>
+                    <p class="card-text"><strong>Nacimiento:</strong> {{ paciente.user.nacimiento }}</p>
+                    <p class="card-text"><strong>Género:</strong> {{ paciente.get_genero_display }}</p>
+                    {% if paciente.obra_social %}
+                    <p class="card-text"><strong>Obra Social:</strong> {{ paciente.obra_social }}</p>
+                    {% else %}
+                    <p class="card-text"><strong>Obra Social:</strong> No posee</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="text-center mt-1">
+                <a href="{% url 'reservar-turno' paciente.user.pk %}" class="btn btn-persian-green px-4 py-2">Reservar Turno</a>
+                <a href="{% url 'gestionar-turnos' paciente.user.pk %}" class="btn btn-primary px-4 py-2">Gestionar Turnos</a>
+                <a href="{% url 'editar-paciente' paciente.user.pk %}" class="btn btn-info px-4 py-2">Actualizar Datos</a>
+                <a href="{% url 'reservar-sobreturno' paciente.user.pk %}" class="btn btn-danger px-4 py-2">Reservar Sobreturno</a>
+            </div>
+        </div>
+    </div>    
+{% else %}
+    <p><i class="flaticon-error pr-1 text-danger"></i>No se ha encontrado un paciente con el documento ingresado</p>
+{% endif %} 

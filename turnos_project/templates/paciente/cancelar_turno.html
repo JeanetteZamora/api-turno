@@ -1,0 +1,33 @@
+{% extends 'paciente/paciente_layout.html' %}
+
+{% block title %}Turno{% endblock title %}
+
+{% block content %}
+    <div class="p-0 container mt-5 info-container shadow mb-4 bg-white rounded">
+        <div class="pl-5 py-3">
+            <h2 class="text-danger">Cancelar Turno</h2>
+        </div>
+        <div class="px-5 py-3">
+            {% if turno %}
+            <h4>¿Desea cancelar el siguiente turno?</h4>
+            <p class="pl-3"><strong>Estado del Turno:</strong> {{ turno.get_estado_display }}</p>
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe src="{% url 'obtener-turno-pdf' turno.pk %}" height="450" width="700"></iframe>
+            </div>
+            <div class="mt-1">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ turno.pk }}">
+                    <a class="btn btn-secondary btn-lg mr-3" href="{% url 'mis-turnos' %}"><span class="px-3">Atrás</span></a>
+                    <input class="btn btn-danger btn-lg" name="turno" value="Cancelar" type="submit" >
+                </form>
+            </div>
+            {% else %}
+            <h3>El turno ya se encuentra cancelado</h3>
+            {% endif %}
+        </div>
+    </div>
+    {% comment %}<a href="{% url 'cancelar-turno' turno.pk %}">- Cancelar Turno</a>{% endcomment %}
+{% endblock content %}
+{% block javascript %}
+{% endblock %}

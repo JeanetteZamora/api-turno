@@ -1,0 +1,52 @@
+{% extends "main_layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Login Administrador{% endblock %}
+{% block css %}
+    body {
+        backgroud-color: #868e96;
+    }
+    @media (min-width: 992px), @media (min-width: 1200px){
+        .login-page{
+            margin-top: 80px;
+            margin-bottom:120px;
+            width:475px;
+        }
+    }
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="mx-auto login-page px-2">
+        <div class="text-center pb-3 mb-3">
+            <img src="{% static "images/logo-brand.svg" %}" height="120" width="120" />
+            <h2 class="text-center mt-1">Gestion de Turnos</h2>
+        </div>
+        <form method="POST" action="{% url 'login-administrador' %}">
+            {% csrf_token %}
+            <div class="form-group">            
+                {{ auth_form.username|as_crispy_field }}
+            </div>
+            <div class="form-group"> 
+                {{ auth_form.password|as_crispy_field }}
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level_tag == 'info' %}
+                    <div class="alert alert-info">
+                        {{ message }}
+                    </div>
+                    {% elif message.level_tag == 'error' %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <button type="submit" class="btn btn-outline-secondary btn-block">Login</button>
+        </form>
+        <a href="{% url 'home' %}">Volver al Inicio</a>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+{% endblock %}

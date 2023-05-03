@@ -1,0 +1,68 @@
+{% extends 'paciente/paciente_layout.html' %}
+{% block title %} Listado de Turnos {% endblock title %}
+{% block css %}
+.badge {
+    font-size:12px;
+    font-weight:500;
+    padding: 5px 5px;
+}
+{% endblock %}
+{% block content %}
+    <div class="p-0 container mt-5 info-container shadow mb-4 bg-white rounded">
+    {% if lista_turnos %}
+        <div class="form-header pl-5 py-3">
+            <h2>Historial</h2>
+        </div>
+        <div class="py-3 px-3">
+            <table class="table table-scroll table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Especialidad</th>
+                    <th scope="col">Información</th>
+                    <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for turno in lista_turnos %}
+                    <tr>
+                        <td>{{ turno.fecha.date }}</td>
+                        <td>{{ turno.medico.especialidad }}</td>
+                        {% comment %} Aca va un link a la DetailView del Turno (donde podra imprimir o cancelar dicho turno) {% endcomment %}
+                        {% if turno.estado == 4 %}
+                            <td><span class="badge badge-pill badge-success">Atendido</span></td>
+                        {% endif %}
+                        {% if turno.estado == 5 %}
+                            <td><span class="badge badge-pill badge-danger">Cancelado</span></td>
+                        {% endif %}
+                        <td><a href="{% url 'ver-turno' turno.pk %}">Ver</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <nav aria-label="Turnos Pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="#">Primera</a></li>
+                    {% endif %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ page_obj.number }}<span class="sr-only">(current)</span></a></li>
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="">&raquo;</a></li>       
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    {% else %}
+        <div class="form-header pl-5 py-3">
+            <h2>Historial</h2>
+        </div>
+        <div class="py-3 px-5">
+            <p>No se han encontrado turnos registrados en el historial.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}

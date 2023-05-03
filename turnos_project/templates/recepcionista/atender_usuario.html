@@ -1,0 +1,52 @@
+{% extends "recepcionista/recepcionista_layout.html" %}
+{% load crispy_forms_tags %}
+{% block import_links %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/datatables.min.js"></script>
+{% endblock %}
+
+{% block title %} Gestión de Turnos {% endblock title %}
+{% block css %}
+    #table-turnos td input[type=radio]{
+        transform:scale(1.4);
+    }   
+{% endblock  %}
+
+{% block content %}
+    <div class="p-0 container shadow bg-white rounded">
+        <div class="title-header py-3 px-5 my-1">
+            <h2>Gestionar Turnos</h2>
+        </div>
+        <div class="py-3 px-5 content-box">
+            <div class="form-row">
+                <div class="col-lg-8 col-md-8">
+                    {{ documento_form|crispy }}
+                </div>
+            </div>
+            <div id="paciente-card"></div>
+        </div>
+    </div>
+
+    <script>
+        $("input[name='documento']").keypress(function(event){  
+            if(event.which == 13) {
+                event.preventDefault();
+                // llamada ajax para obtener el paciente
+                documento = $(this).val();
+                $sendData = {
+                    'documento': documento,
+                }
+                $.ajax({
+                    method: "GET",
+                    url: "{% url 'obtener-paciente-ajax' %}",
+                    data: $sendData,
+                    success: function(data) {
+                        $("#paciente-card").empty();
+                        $("#paciente-card").append(data);
+                    }   
+                });
+            }
+        });
+        
+    </script>
+{% endblock content %}

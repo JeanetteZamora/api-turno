@@ -1,0 +1,14 @@
+{% extends 'administrador/administrador_layout.html' %}
+{% block title %}Eliminar Obra Social{% endblock title %}
+{% block content-title %}Eliminar Obra Social{% endblock %}
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col">
+            <form method="POST">
+                {% csrf_token %}
+                <p>¿Está seguro que quiere eliminar la obra social {{ object.nombre }}?</p>
+                <input type="submit" value="Confirm">
+            </form>
+        </div>
+    </div>
+{% endblock content %}

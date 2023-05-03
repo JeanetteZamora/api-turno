@@ -1,0 +1,52 @@
+{% load static %}
+<html>
+    <head>
+        <link href="{% static "css/bootstrap/bootstrap.min.css" %}" rel="stylesheet" />
+        <link rel="icon" href="{% static 'images/logo-brand.svg' %}" type="image/gif" sizes="16x16">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="{% static "js/bootstrap/bootstrap.min.js" %}"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{% static "icons/essential-icon-set-fill/flaticon.css" %}" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" type="text/css" href="{% static "css/medico/medico-main.css" %}" />
+        {% block import_links %}{% endblock %}
+        <style>
+        {% block css %}
+        {% endblock %}
+        </style>
+    </head>
+    <body>
+        <!-- El layout va a consistir de una sidebar, una navbar principal y el contenido -->
+
+        {% include "medico/medico_navbar.html" %}
+
+        <div class="container-fluid mt-3">
+            <div class="row">
+                <nav class="col-md-2 mb-3" id="Navbar">
+                    <div class="p-0 container shadow bg-white rounded">
+                        <div class="nav flex-column nav-pills p-2" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link" href="{% url 'index-medico' %}" role="tab"><i class="flaticon-home mr-1"></i>Inicio</a>
+                            <a class="nav-link" href="{% url 'lista-turnos-confirmados' %}" role="tab"><i class="flaticon-notepad-2 mr-1"></i>Atención de Turnos</a>
+                            <a class="nav-link" href="{% url 'horario-laboral' %}" role="tab"><i class="flaticon-calendar mr-1"></i>Horarios Laborales</a>
+                        </div>
+                    </div>
+                </nav>
+                <div class="col-md-10">
+                    <div class="p-0 container shadow bg-white rounded">
+                        <div class="title-header py-3 px-5">
+                            <h2>{% block content-title %}{% endblock %}</h2>
+                        </div>
+                        <div class="py-3 px-5 content-box">
+                            {% block content-body %} 
+                            {% endblock %}
+                        </div>
+                    </div>         
+                </div>
+            </div>
+        </div>
+        {% block jquery %}
+        {% endblock %}
+        {% block javascript %}
+        {% endblock %}
+    </body>
+</html>

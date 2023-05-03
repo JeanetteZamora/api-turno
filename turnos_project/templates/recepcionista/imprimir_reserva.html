@@ -1,0 +1,10 @@
+{% extends "recepcionista/recepcionista_layout.html" %}
+{% block title %} Gestión de Turnos {% endblock title %}
+
+{% block content %}
+     <div class="container shadow bg-white rounded p-3 text-center">
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe src="{% url 'obtener-turno-pdf' turno.pk %}" height="500" width="800"></iframe>
+        </div>
+    </div>
+{% endblock %}

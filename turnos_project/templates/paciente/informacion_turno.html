@@ -1,0 +1,20 @@
+{% extends 'paciente/paciente_layout.html' %}
+
+{% block title %}Turno{% endblock title %}
+
+{% block content %}
+    <div class="p-0 container mt-5 info-container shadow mb-4 bg-white rounded">
+        <div class="pl-5 py-3">
+            <h2 class="text-info">Informacion del Turno</h2>
+        </div>
+        <div class="px-5 py-3">
+            <p><strong>Estado:</strong> {{ turno.get_estado_display }}</p>
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe src="{% url 'obtener-turno-pdf' turno.pk %}" height="450" width="700"></iframe>
+            </div>
+        </div>
+    </div>
+    {% comment %}<a href="{% url 'cancelar-turno' turno.pk %}">- Cancelar Turno</a>{% endcomment %}
+{% endblock content %}
+{% block javascript %}
+{% endblock %}

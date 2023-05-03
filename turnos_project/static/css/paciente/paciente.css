@@ -1,0 +1,69 @@
+/*  ----------------------------------
+        COLORS VARIABLES
+    ---------------------------------- */
+:root {
+    --main-bg-color:#06b2b6;
+    --secondary-bg-color: #fffefe;
+    --btn-primary-color:#06b2b6; 
+    --btn-secondary-color:#fffefe;
+    --btn-alternative-color: #424242;
+}
+
+.main-container {
+    background-color: #f8f8f8;
+}
+
+/*  ----------------------------------
+        PRIMARY NAVBAR 
+    ---------------------------------- */
+.navbar-custom {
+    background-color: #53a2be;
+}
+/* change the link color */
+.navbar-custom .navbar-nav .nav-link {
+    font-size:1.3em;
+    color: rgba(255,255,255,.5);
+    margin-right:15px;
+}
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: #ffffff;
+}
+/*  ----------------------------------
+        SECONDARY NAVBAR 
+    ---------------------------------- */
+
+.secondary-navbar .nav-link {
+    text-decoration:none;
+    color:var(--primary);
+}
+.secondary-navbar .nav-link:hover {
+    background-color:var(--primary);
+    color: white;
+}
+.form-header {
+    background-color:var(--primary);
+    color: white;
+}
+.form-container, .info-container {
+    border: 1px solid var(--primary);
+}
+.info-fill {
+    background-color:var(--info);
+    color: white;
+}
+
+/*  ----------------------------------
+        PACIENTE CSS
+    ---------------------------------- */
+
+.btn-paciente {
+    border-radius: 2px;
+    background-color: var(--btn-secondary-color);
+    color: var(--btn-alternative-color);   
+}
+.btn-paciente:hover {
+    background-color: var(--btn-alternative-color);
+    color: var(--btn-secondary-color);   
+    transition: 0.4s;
+}

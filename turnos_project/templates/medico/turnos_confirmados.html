@@ -1,0 +1,175 @@
+{% extends 'medico/medico_layout.html' %}
+{% block title %} Atender Turnos {% endblock %}
+{% block css %}
+table.formatHTML5 tr.selected {
+    background-color: #0099ff !important;
+    color:#fff;
+    vertical-align: middle;
+    padding: 1.5em;
+}
+{% endblock %}
+{% block content-title %}
+Listado de Turnos Confirmados
+{% endblock %}
+{% block content-body %}
+<!-- Modal -->
+    <div class="modal fade" id="modalCancelar" tabindex="-1" role="dialog" aria-labelledby="modalCancelarLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCancelarLabel">Cancelar Turno</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <form method="POST" action="/" id="form-cancelar">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" id="btn-confirmar-cancel">Confirmar</button>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.level_tag == 'info' %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>                    
+                {% elif message.level_tag == 'warning' %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>           
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <div class="row">
+            <div class="col justify-content-center">
+                <table id="tabla-turnos" class="formatHTML5 table table-bordered table-striped table-hover" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th hidden>Id</th>
+                            <th>Paciente</th>
+                            <th>Hora</th>
+                            <th>Prioridad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="updatableBody">
+                        {% for turno in turnos_confirmados %}
+                            <tr>
+                                <td class="turno-id" hidden>{{ turno.id }}</td>
+                                <td>{{ turno.paciente }}</td>
+                                <td>{{ turno.fecha.time }}</td>
+                                {% if turno.prioridad %}
+                                    <td>{{ turno.prioridad }}</td>
+                                {% else %}
+                                    <td> - </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="btn-group">
+                    <button id="btn-cancelar" type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#modalCancelar" disabled>Cancelar</button>
+                    <button id="btn-actualizar" type="button" class="btn btn-primary mx-2">Actualizar Lista</button>
+                    <button id="btn-atender" type="button" class="btn btn-primary mx-2" disabled>Atender</button>
+                </div>
+            </div>    
+        </div>
+    </div>
+    <script type="text/javascript">
+        var medicoId = "{{ medico.pk }}";
+    </script>
+
+{% endblock %}
+{% block jquery %}
+<script>
+    var tBodyU;
+    $(document).ready(function(){
+        var btnCancelar = document.getElementById("btn-cancelar");
+        var btnActualizar = document.getElementById("btn-actualizar");
+        var btnAtender =  document.getElementById("btn-atender");
+        var btnConfirmarCancel = document.getElementById("btn-confirmar-cancel");
+        var turnoId;
+        var formCancelar =  document.getElementById("form-cancelar") || null;
+        const baseUrl = 'http://' + window.location.host + '/medico/';
+
+        tBodyU =  $("#updatableBody");
+
+        btnCancelar.disabled = true;
+        btnAtender.disabled = true;
+        
+        $("#updatableBody tr").click(function () {
+            $('.selected').removeClass('selected');
+            $(this).addClass("selected");
+            turnoId = $('.turno-id',this).html();
+            btnCancelar.disabled = false;
+            btnAtender.disabled = false;
+            formCancelar.action = baseUrl + 'cancelar-turno-medico/' + turnoId + '/';
+        });
+
+        $('#btn-atender').on('click', function(){
+            let endUrl = 'atender-turno/' + turnoId + '/';
+            let url =  baseUrl + endUrl;
+            window.location.replace(url);
+        });
+
+        $('#btn-actualizar').on('click', function(){
+            $sendData = {
+                'medico_pk': medicoId,
+            }
+            $.ajax({
+                type: "GET",
+                url: "{% url 'actualizar-turnos-confirmados' %}",  // URL to your view that serves new info
+                data: $sendData,
+                success: function(response){
+                    tBodyU.empty();
+                    tBodyU.append(response);
+                    $("#updatableBody tr").click(function () {
+                        $('.selected').removeClass('selected');
+                        $(this).addClass("selected");
+                        turnoId = $('.turno-id',this).html();
+                        btnCancelar.disabled = false;
+                        btnAtender.disabled = false;
+                        formCancelar.action = baseUrl + 'cancelar-turno-medico/' + turnoId + '/';
+                    });
+                }
+            })
+        });
+        setInterval(function() {
+            $sendData = {
+                'medico_pk': medicoId,
+            }
+            $.ajax({
+                type: "GET",
+                url: "{% url 'actualizar-turnos-confirmados' %}",  // URL to your view that serves new info
+                data: $sendData,
+                success: function(response){
+                    tBodyU.empty();
+                    tBodyU.append(response);
+                    $("#updatableBody tr").click(function () {
+                        $('.selected').removeClass('selected');
+                        $(this).addClass("selected");
+                        turnoId = $('.turno-id',this).html();
+                        btnCancelar.disabled = false;
+                        btnAtender.disabled = false;
+                        formCancelar.action = baseUrl + 'cancelar-turno-medico/' + turnoId + '/';
+                    });
+                }
+            });
+        }, 30000);
+    });
+
+
+</script>
+{% endblock %}

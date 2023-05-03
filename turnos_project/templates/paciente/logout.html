@@ -1,0 +1,19 @@
+{% extends "main_layout.html" %}
+{% block title %}Login Paciente{% endblock %}
+{% block css %}
+    
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1>LOGGED OUT AS PACIENTE</h1>
+        <a href="{% url 'home' %}">Inicio</a>
+    </div>
+{% endblock %}
+{% block javascript %}
+<script>
+    window.onload = function() {
+        // similar behavior as an HTTP redirect
+        window.location.replace("{% url 'home' %}");
+    }
+</script>
+{% endblock %}

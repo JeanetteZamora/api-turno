@@ -1,0 +1,82 @@
+{% extends "paciente/paciente_layout.html" %}
+{% load static %}
+{% block title %}Informacion Paciente{% endblock title %}
+{% block css %}
+.profile-img {
+    width: 30%;
+    height: auto;
+}
+.info-table {
+    font-family:'Montserrat',sans-serif;
+    font-size: 14px;
+}
+{% endblock %}
+{% block content %}  
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-3 col-sm-5">
+                <div class="info-container text-center shadow mb-4 bg-white rounded">
+                    <div class="py-3 px-2">
+                    {% if user.paciente.genero == 1 %}
+                        <img class="mb-3 profile-img img-fluid" src="{% static "icons/essential-set/user-3.svg" %}" width="66%" alt="Usuario">
+                    {% elif user.paciente.genero == 2 %}
+                        <img class="mb-3 profile-img img img-fluid" src="{% static "icons/essential-set/user-2.svg" %}" width="66%" alt="Usuario">
+                    {% endif %}
+                        <br>
+                        <h3><strong>{{ user.first_name }} {{ user.last_name }}</strong></h3>
+                    </div>
+                    <p class="py-2 m-0 info-fill">Última Conexión: {{ user.last_login }}</p>
+                    {% if user.paciente.penalizado %}
+                        <!-- La idea sería que este campo sea similar al de Última Conexión, pero en rojo -->
+                        <p class="py-2 m-0 bg-danger text-light">Penalizado hasta el {{ user.paciente.fecha_despenalizacion.date }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-7">
+                <div class="info-container shadow mb-4 bg-white rounded">
+                    <div class="px-2 py-1 info-fill">
+                        <h2>Datos de Paciente</h2>
+                    </div>
+                    <table class="table table-borderless info-table">
+                        <tbody>
+                            <tr>
+                                <th class="text-info info-th">APELLIDO:</th>
+                                <td>{{ user.last_name }}</td>
+                            </tr> 
+                            <tr>
+                                <th class="text-info info-th">NOMBRE:</th>
+                                <td>{{ user.first_name }}</td>
+                            </tr> 
+                            <tr>
+                                <th class="text-info info-th">FECHA DE NACIMIENTO:</th>
+                                <td>{{ user.nacimiento }}</td>
+                            </tr> 
+                            <tr>
+                                <th class="text-info info-th">DOCUMENTO:</th>
+                                <td>{{ user.documento }}</td>
+                            </tr> 
+                            <tr>
+                                <th class="text-info info-th">DOMICILIO:</th>
+                                <td>{{ user.domicilio }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-info">TELEFONO:</th>
+                                <td>{{ user.telefono }}</td>
+                            </tr> 
+                            <tr>
+                                <th class="text-info">GENERO:</th>
+                                <td>{{ user.paciente.get_genero }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-info">OBRA SOCIAL:</th>
+                                <td>{{ user.paciente.obra_social }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block javascript %}
+{% endblock  %}

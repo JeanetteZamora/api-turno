@@ -1,0 +1,191 @@
+{% extends "main_layout.html" %}
+{% load static %}
+{% block title %}Sistema de Turnos{% endblock %}
+    {% block css %}
+        #hospital-image-container{
+            height: 30rem;
+            background-image:url("{% static "images/hero.jpg" %}");
+            background-position:center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .presentation-col{
+            padding:75px 75px;
+        }
+        .instructions-list{
+            margin-top:7.5px;
+            font-size: 1.1rem;
+        }
+        .custom-card {
+            background-color: #18a3eb;
+        }
+        .homepage-boxes {
+            padding: 100px 0;
+            background-image: url("{% static "images/departments-bg.jpg" %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        #turnoInstrucciones {
+            background-image:url("{% static "images/footer-bg.png" %}");
+            background-repeat: no-repeat; 
+            backgroun-position:center;
+            background-size: cover;
+        }
+        /*
+        # Opening Hours
+        --------------------------------*/
+        .opening-hours,
+        .emergency-box,
+        .appointment-box,
+        .contact-info {
+            position: relative;
+            padding: 50px;
+            border-radius: 5px;
+            border: 2px solid #dde4ea;
+        }
+
+        .opening-hours {
+            border-color: #18a3eb;
+        }
+
+        .opening-hours h2,
+        .emergency-box h2,
+        .appointment-box h2,
+        .contact-info h2 {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 48px;
+            padding-bottom: 7.5px;
+            padding-left: 50px;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .opening-hours ul {
+            list-style: none;
+        }
+
+        .opening-hours ul li {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: 500;
+            color:white;
+        }
+
+        .opening-hours ul li span {
+            display: inline-block;
+            margin-left: 5px;
+        }
+        /*
+        # Emergency
+        --------------------------------*/
+        .emergency-box {
+            padding: 16px;
+        }
+
+        .emergency-box p {
+            margin-top: 16px;
+            margin-left: 25px;
+            margin-bottom: 0;
+            font-size: 13px;
+            font-style: italic;
+            color:whitesmoke;
+        }
+
+        .emergency-box .call-btn {
+            margin:35px;
+            font-size:1.2rem;
+        } 
+
+        {% endblock %}
+
+        {% block content %}
+        <div id="hospital-image-container" class="container-fluid">
+            <nav class="navbar navbar-expand-sm py-lg-3 py-md-2 py-sm-2 mb-3">
+                <a class="navbar-brand" href="#"><img src="{% static "images/logo-brand.svg" %}" height="50" width="50"/> GESTION TURNOS</a>
+                <ul class="navbar-nav ml-auto">                 
+                {% if user.is_authenticated %}
+                    {% if perms.turnos_app.es_paciente %}
+                      <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary" href="{% url 'login-paciente' %}"><img class="m-1" src="{% static "images/green-dot.svg" %}" height="10px" width="10px" />{{ user.username|upper }}</a>
+                      </li>
+                      {% elif perms.turnos_app.es_recepcionista %}
+                      <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary" href="{% url 'login-recepcionista' %}"><img class="m-1" src="{% static "images/green-dot.svg" %}" height="10px" width="10px" />{{ user.username|upper }}</a>
+                      </li>
+                      {% elif perms.turnos_app.es_medico %}
+                      <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary" href="{% url 'login-medico' %}"><img class="m-1" src="{% static "images/green-dot.svg" %}" height="10px" width="10px" />{{ user.username|upper }}</a>
+                      </li>
+                      {% elif perms.turnos_app.es_administrador %}
+                      <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary" href="{% url 'login-administrador' %}"><img class="m-1" src="{% static "images/green-dot.svg" %}" height="10px" width="10px" />{{ user.username|upper }}</a>
+                      </li>
+                    {% endif %}
+                  {% endif %}
+                </ul>
+            </nav>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12 text-lg-left text-md-left text-sm-center text-center mt-5 pt-5 px-5">
+                    <div class="p-2">
+                        <h1>Turnos Hospitalarios</h1>
+                        <h5>Servicio para solicitar turnos por la web</h5>
+                        {% if not user.is_authenticated %}
+                        <a class="btn btn-outline-primary btn-lg px-5 my-3" href="{% url 'login-paciente' %}" role="button">Login</a>
+                        <p>¿No quiere ingresar como paciente? <a href="{% url 'login-general' %}">Ir a login</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>         
+        <div class="container-fluid px-0">
+                <div class="presentation-col" id="turnoInstrucciones">
+                    <h1>¿Cómo sacar un turno por medio de la web?</h1>
+                    <ul class="m-4">
+                        <li class="instructions-list">Debe tener un usuario</li>
+                        <li class="instructions-list">Si no lo tiene, dirígase a la recepción para solicitar uno</li>
+                        <li class="instructions-list">Inicie sesión en la plataforma</li>
+                        <li class="instructions-list">Haga click reservar turno</li>
+                        <li class="instructions-list">Seleccione un turno existente para reservar</li>
+                    </ul>
+                </div>
+        </div>
+        <div class="homepage-boxes">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-md-6 col-lg-5">
+                            <div class="opening-hours">
+                                <h2 class="d-flex align-items-center">Horarios de Atención</h2>
+        
+                                <ul class="p-0 m-0">
+                                    <li>Lunes a Jueves <span>8:00 - 19:00</span></li>
+                                    <li>Viernes <span>8:00 - 18:30</span></li>
+                                    <li>Sábado <span>9:30 - 17:00</span></li>
+                                    <li>Domingo <span>9:30 - 15:00</span></li>
+                                </ul>
+                            </div>
+                        </div>
+        
+                        <div class="col-12 col-md-6 col-lg-2 mt-5 mt-lg-0">
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-5 mt-5 mt-md-0">
+                            <div class="emergency-box">
+                                <h2 class="d-flex align-items-center">Telefono</h2>
+        
+                                <div class="call-btn button gradient-bg">
+                                    <a class="d-flex justify-content-center align-items-center">
+                                        <img src="{% static "images/emergency-call.png" %}"><span class="text-light"> +54 586 778 8892</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+        
+                    </div>
+                </div>
+            </div>                 
+    {% endblock content %}          

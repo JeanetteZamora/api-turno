@@ -1,0 +1,41 @@
+{% extends 'medico/medico_layout.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block title %}Nuevo Horario Laboral{% endblock title %}
+
+{% block import_links %}
+    {{ form.media.css }}
+    <link href="https://unpkg.com/flatpickr@4.6.3/dist/themes/light.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block content-title %}
+    Crear Horario Laboral
+{% endblock %}
+{% block content-body %}
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div id="loadingSpinner" class="d-none my-2">
+            <div class="spinner-border text-success align-middle">
+                <span class="sr-only">Generando Turnos...</span>
+            </div>
+            <span><strong>Generando turnos. Esto puede tomar un tiempo...</strong></span>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit">Crear Horario</button>
+        </div>
+    </form>
+</div>
+{% endblock content-body %}
+
+{% block javascript %}
+    {{ form.media.js }}
+<script>
+    $(document).ready(function(){
+        $("form").on("submit",function(){
+            $("#loadingSpinner").removeClass("d-none");
+        });
+    });
+</script>
+{% endblock %}
